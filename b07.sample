@@ -1,0 +1,14 @@
+#
+# Copy this file to ~/.b07 and edit
+#
+
+[ingress]
+
+# the email address associated with your Ingress account
+
+email = youremail@gmail.com
+
+# if you use two-factor authentication, you'll need to create an
+# application-specific password to use here
+
+password = yourpassword
