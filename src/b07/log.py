@@ -62,6 +62,9 @@ class Observer(object):
 
         util.untilConcludes(self.write, text)
         util.untilConcludes(self.flush)
+        
+        if eventDict['level'] >= CRITICAL:
+            self.reactor.stop()
 
 __all__ = ['setup',
            'trace', 'debug', 'info', 'warning', 'error', 'critical',
