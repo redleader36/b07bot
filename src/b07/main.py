@@ -22,9 +22,9 @@ import ConfigParser
 from twisted.internet import reactor
 
 from b07.log import setup
-from b07.log import INFO
+from b07.log import TRACE
 
-setup(reactor, INFO)
+setup(reactor, TRACE)
 
 import b07.api
 import b07.portals
