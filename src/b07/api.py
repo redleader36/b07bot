@@ -256,7 +256,7 @@ class API(object):
         if 'xsrfToken' not in result:
             critical('Authentication with Ingress severs failed for unknown reason')
 
-        self.xsrf_token = result['xsrfToken']
+        self.xsrf_token = str(result['xsrfToken'])
         self.player_nickname = result['nickname']
         self.player_guid = result['playerEntity'][0]
 
