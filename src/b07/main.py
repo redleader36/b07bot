@@ -115,11 +115,10 @@ def logportals(inventory, reactor):
     info("|---------------------+-----------+-----------+-----------------+---------|")
     info("| Turrets             |   %3d     |    %3d    |       %3d       |  %4d   |" % (turrets["COMMON"], turrets["RARE"], turrets["VERY_RARE"], turrets["total"]))
     info("|---------------------+-----------+-----------+-----------------+---------|")
-    info("Viruses")
-    for item_level in sorted(flip_cards.keys()):
-        info("\t"+str(item_level)+": "+str(flip_cards[item_level]))
-    info("Total Items: "+str(inv_count))
-
+    info("| Viruses             |         ADA - %3d, JARVIS - %3d         |  %4d   |" % (flip_cards["ADA"], flip_cards["JARVIS"], flip_cards["total"]))
+    info("|---------------------+-----------------------------------------+---------|")
+    info("| TOTAL NUMBER OF ITEMS (Inventory cap is 2000 items)           |  %4d   |" % (inv_count))
+    info("|---------------------------------------------------------------+---------|")
     # all of the above code will hopefully just have a function call for it
     #b07.gear.loggear()
     reactor.stop()
