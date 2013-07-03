@@ -12,3 +12,16 @@ email = youremail@gmail.com
 # application-specific password to use here
 
 password = yourpassword
+
+[server]
+
+http_port = 8001
+https_port = 8002
+wss_port = 8003
+
+# openssl req -x509 -newkey rsa:4096 -nodes -days 3650 -subj /CN=localhost -keyout key.pem -out cert.pem
+
+ssl_key = ~/dev/b07/key.pem
+ssl_cert = ~/dev/b07/cert.pem
+
+web_root = ~/dev/b07/static
