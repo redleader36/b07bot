@@ -30,6 +30,8 @@ from b07.log import info
 from b07.inventory import Ada, Jarvis
 
 fromFile = False
+# it's very important to set up logging very early in the life of an
+# application...
 
 import b07.api
 import b07.portals
@@ -111,6 +113,8 @@ def logportals(inventory, reactor):
     for item_level in sorted(flip_cards.keys()):
         info(str(item_level)+": "+str(flip_cards[item_level]).format(now))
     info("Total Items: "+str(inv_count).format(now))
+
+    # all of the above code will hopefully just have a function call for it
     #b07.gear.loggear()
     reactor.stop()
 
@@ -151,6 +155,10 @@ def parseArguments():
         args.config = True
 
     fromFile = args.config
+
+    # it's very important to set up logging very early in the life of an
+    # application...
+
     if args.debug:
         setup(reactor, TRACE)
     else:

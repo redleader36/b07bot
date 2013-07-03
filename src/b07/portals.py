@@ -33,7 +33,11 @@ class Portal(object):
         print js
         if guid in klass.portals:
             return klass.portals[guid]
-        return klass(guid, js['portalTitle'], js['portalLocation'], js['portalAddress'], js['portalImageUrl'])
+        return klass(guid,
+                     js['portalTitle'],
+                     js['portalLocation'],
+                     js['portalAddress'],
+                     js['portalImageUrl'])
 
     def __init__(self, guid, title, location, address, image_url):
         self.guid = guid
@@ -44,6 +48,23 @@ class Portal(object):
         self.keys = {}
         self.portals[guid] = self
 
+def jsonlist():
+    keys = Portal.portals.keys()
+    keys.sort(lambda a, b: cmp(Portal.portals[a].title, Portal.portals[b].title))
+
+    l = []
+    for key in keys:
+        portal = Portal.portals[key]
+        l.append({'guid': portal.guid,
+                  'title': portal.title,
+                  'location': portal.location,
+                  'address': portal.address,
+                  'image_url': portal.image_url,
+                  'keys': len(portal.keys)})
+
+    return {'portals': l}
+
+# for debugging purposes, log a list of portals we know about
 def logportals():
     key_titles = {}
     keys = Portal.portals.keys()

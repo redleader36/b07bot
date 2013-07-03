@@ -19,9 +19,9 @@
 import sys
 import inspect
 
-from twisted.python import log
+from b07.log import debug, error
 
-import portals
+import b07.portals
 
 class Inventory(object):
     def __init__(self):
@@ -69,14 +69,13 @@ class GameEntity(object):
                 break
         
         if resource_type is None:
-            log.msg('unable to interpret item: {}'.format(js))
+            error('unable to interpret item: {}'.format(js))
             return
 
         if not resource_converters.has_key(resource_type):
-            log.msg('don\'t know how to convert: {}'.format(js))
+            error('don\'t know how to convert: {}'.format(js))
             return
 
-        #log.msg('{}'.format(resource_type))
         resource_converters[resource_type].fromjs2(inventory, guid, js[2])
 
     def __init__(self, inventory, guid):
@@ -93,8 +92,7 @@ class PortalKey(GameEntity):
 
     @classmethod
     def fromjs2(klass, inventory, guid, js2):
-        log.msg('{}'.format(js2))
-        portal = portals.Portal.fromPortalCoupler(js2['portalCoupler'])
+        portal = b07.portals.Portal.fromPortalCoupler(js2['portalCoupler'])
         klass(inventory, guid, portal)
 
     def __init__(self, inventory, guid, portal):
@@ -169,7 +167,7 @@ class FlipCard(GameEntity):
             Jarvis(inventory, guid)
 
         else:
-            log.msg('Unknown flip card: {}'.format(js2))
+            error('Unknown flip card: {}'.format(js2))
 
     def __init__(self, inventory, guid):
         super(FlipCard, self).__init__(inventory, guid)
