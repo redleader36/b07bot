@@ -24,6 +24,8 @@ from twisted.internet import reactor
 from b07.log import setup
 from b07.log import TRACE
 
+# it's very important to set up logging very early in the life of an
+# application...
 setup(reactor, TRACE)
 
 import b07.api
