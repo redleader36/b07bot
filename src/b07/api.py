@@ -129,6 +129,9 @@ class API(object):
 
     def err(self, failure):
         log_failure(failure)
+        
+    def getInventory(self):
+        return self.inventory
 
     def _defer_until_authenticated(self, func, args, kw):
         kw['finished'] = defer.Deferred()

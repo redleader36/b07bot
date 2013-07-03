@@ -16,6 +16,10 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#GPS conversions
+#010a4a45,04abff21 -> 17.443988,78.377658
+#027bab59,fa8b43d1 -> 41.659783,-91.536543  
+
 import datetime
 
 from b07.log import info
@@ -26,6 +30,7 @@ class Portal(object):
     @classmethod
     def fromPortalCoupler(klass, js):
         guid = js['portalGuid']
+        print js
         if guid in klass.portals:
             return klass.portals[guid]
         return klass(guid, js['portalTitle'], js['portalLocation'], js['portalAddress'], js['portalImageUrl'])
@@ -40,14 +45,21 @@ class Portal(object):
         self.portals[guid] = self
 
 def logportals():
+    key_titles = {}
     keys = Portal.portals.keys()
     keys.sort(lambda a, b: cmp(Portal.portals[a].title, Portal.portals[b].title))
     now = datetime.datetime.now()
     info('---vvvv Portals known as of {} vvvv---'.format(now))
     for key in keys:
+	portal = Portal.portals[key]
+        try:
+            key_titles[portal.title] += 1
+        except KeyError:
+            key_titles[portal.title] = 1
+    for key in keys:
         portal = Portal.portals[key]
-        if portal.title == 'US Post Office':
-            info('{} ({}): {}'.format(portal.title, portal.address, len(portal.keys)))
+        if key_titles[portal.title] > 1:
+            info('{} ({}): {}'.format(portal.title.encode('ascii','ignore'), portal.address, len(portal.keys)))
         else:
-            info('{}: {}'.format(portal.title, len(portal.keys)))
+            info('{}: {}'.format(portal.title.encode('ascii','ignore'), len(portal.keys)))
     info('---^^^^ Portals known as of {} ^^^^---'.format(now))

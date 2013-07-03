@@ -161,6 +161,7 @@ class FlipCard(GameEntity):
 
     @classmethod
     def fromjs2(klass, inventory, guid, js2):
+    
         if js2['flipCard']['flipCardType'] == 'ADA':
             Ada(inventory, guid)
 
