@@ -35,6 +35,7 @@ from b07.log import info
 from b07.log import warning
 from b07.log import error
 from b07.log import critical
+from b07.log import log_failure
 from b07.log import CRITICAL
 
 import b07.utils
@@ -127,7 +128,7 @@ class API(object):
         self._on_inventory_refreshed.append((callback, args, kw))
 
     def err(self, failure):
-        log.err(failure, level = CRITICAL)
+        log_failure(failure)
 
     def _defer_until_authenticated(self, func, args, kw):
         kw['finished'] = defer.Deferred()

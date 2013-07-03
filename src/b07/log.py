@@ -67,7 +67,7 @@ class Observer(object):
             self.reactor.stop()
 
 __all__ = ['setup',
-           'trace', 'debug', 'info', 'warning', 'error', 'critical',
+           'trace', 'debug', 'info', 'warning', 'error', 'critical', 'log_failure',
            'TRACE', 'DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL']
 
 observer = None
@@ -82,6 +82,17 @@ def msg(*message, **kw):
         sys.exit(1)
 
     log.msg(*message, **kw)
+
+def err(failure, **kw):
+    global write
+    global flush
+
+    if observer is None:
+        write('logging is not set up yet!')
+        flush()
+        sys.exit(1)
+
+    log.err(failure, **kw)
 
 def trace(*message, **kw):
     kw['level'] = TRACE
@@ -112,6 +123,11 @@ def critical(*message, **kw):
     kw['level'] = CRITICAL
     kw['CODE_FILE'], kw['CODE_LINE'], kw['CODE_FUNC'] = traceback.extract_stack(limit=2)[0][:3]
     msg(*message, **kw)
+
+def log_failure(failure, **kw):
+    kw['level'] = CRITICAL
+    kw['CODE_FILE'], kw['CODE_LINE'], kw['CODE_FUNC'] = traceback.extract_stack(limit=2)[0][:3]
+    err(failure, **kw)
 
 def setup(reactor, level = DEBUG):
     global observer
