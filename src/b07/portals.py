@@ -28,7 +28,11 @@ class Portal(object):
         guid = js['portalGuid']
         if guid in klass.portals:
             return klass.portals[guid]
-        return klass(guid, js['portalTitle'], js['portalLocation'], js['portalAddress'], js['portalImageUrl'])
+        return klass(guid,
+                     js['portalTitle'],
+                     js['portalLocation'],
+                     js['portalAddress'],
+                     js['portalImageUrl'])
 
     def __init__(self, guid, title, location, address, image_url):
         self.guid = guid
