@@ -22,6 +22,7 @@ import inspect
 from b07.log import debug, error
 
 import b07.portals
+import b07.gear
 
 class Inventory(object):
     def __init__(self):
@@ -92,6 +93,7 @@ class PortalKey(GameEntity):
 
     @classmethod
     def fromjs2(klass, inventory, guid, js2):
+        entity = b07.gear.Gear.catalogGear(js2['resource'])
         portal = b07.portals.Portal.fromPortalCoupler(js2['portalCoupler'])
         klass(inventory, guid, portal)
 
@@ -109,6 +111,7 @@ class PortalKey(GameEntity):
 class LevelEntity(GameEntity):
     @classmethod
     def fromjs2(klass, inventory, guid, js2):
+        entity = b07.gear.Gear.catalogGear(js2['resourceWithLevels'])
         klass(inventory, guid, js2['resourceWithLevels']['level'])
 
     def __init__(self, inventory, guid, level):
@@ -118,6 +121,7 @@ class LevelEntity(GameEntity):
 class PortalMod(GameEntity):
     @classmethod
     def fromjs2(klass, inventory, guid, js2):
+        entity = b07.gear.Gear.catalogGear(js2['modResource'])
         klass(inventory, guid, js2['modResource']['rarity'])
 
     def __init__(self, inventory, guid, rarity):
@@ -159,7 +163,7 @@ class FlipCard(GameEntity):
 
     @classmethod
     def fromjs2(klass, inventory, guid, js2):
-    
+        entity = b07.gear.Gear.catalogGear(js2['flipCard'])
         if js2['flipCard']['flipCardType'] == 'ADA':
             Ada(inventory, guid)
 
