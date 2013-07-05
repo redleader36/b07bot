@@ -141,11 +141,11 @@ def emailKMLFile(alias, email):
     msg['Date'] = formatdate(localtime=True)
     msg['Subject'] = "Ingress Inventory KML File"
     files = [os.path.expanduser("~/"+alias+"_keys.kml")]
-    text = "<html><boody>Hi Agent "+alias+",<br>Attached is a copy of your keys in a kml file format, which can be imported into google maps.<br><pre>"
-    file = open(os.path.expanduser("~/"+alias+"_gear.txt"),'rb')
+    text = "<html><boody>Hi Agent "+alias+",<br>Attached is a copy of your keys in a kml file format, which can be imported into google maps.<br>"
+    file = open(os.path.expanduser("~/"+alias+"_gear.html"),'rb')
     for line in file.readlines():
         text += line
-    text += "</pre>The Ingress Inventory Team</body></html>"
+    text += "The Ingress Inventory Team</body></html>"
     msg.attach( MIMEText(text, 'html'))
     for file in files:
         part = MIMEBase('application', "octet-stream")
