@@ -17,6 +17,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import datetime
+import os
 
 from b07.log import info
 
@@ -104,3 +105,39 @@ def loggear():
     info("|---------------------+-----------------------------------------+---------|")
     info("| TOTAL NUMBER OF ITEMS (Inventory cap is 2000 items) Keys: %(keyt)3d |  %(t)4d   |" % items)
     info("|---------------------------------------------------------------+---------|")
+    
+def writeGear(alias):
+    items = Gear.gear
+    g = open(os.path.expanduser("~/"+alias+"_gear.txt"),"w")
+    
+    g.write("|---------------+-----+-----+-----+-----+-----+-----+-----+-----+---------|\n")
+    g.write("|     Item      |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  Total  |\n")
+    g.write("|---------------+-----+-----+-----+-----+-----+-----+-----+-----+---------|\n")
+    g.write("| Bursters      | %(b1)3d | %(b2)3d | %(b3)3d | %(b4)3d | %(b5)3d | %(b6)3d | %(b7)3d | %(b8)3d |   %(bt)4d  |\n" % items)
+    g.write("|---------------+-----+-----+-----+-----+-----+-----+-----+-----+---------|\n")
+    g.write("| Resonators    | %(r1)3d | %(r2)3d | %(r3)3d | %(r4)3d | %(r5)3d | %(r6)3d | %(r7)3d | %(r8)3d |   %(rt)4d  |\n" % items)
+    g.write("|---------------+-----+-----+-----+-----+-----+-----+-----+-----+---------|\n")
+    g.write("| Power Cubes   | %(p1)3d | %(p2)3d | %(p3)3d | %(p4)3d | %(p5)3d | %(p6)3d | %(p7)3d | %(p8)3d |   %(pt)4d  |\n" % items)
+    g.write("|---------------+-----+-----+-----+-----+-----+-----+-----+-----+---------|\n")
+    g.write("| Media         | %(e1)3d | %(e2)3d | %(e3)3d | %(e4)3d | %(e5)3d | %(e6)3d | %(e7)3d | %(e8)3d |   %(et)4d  |\n" % items)
+    g.write("|---------------+-----+-----+-----+-----+-----+-----+-----+-----+---------|\n")
+    g.write("|      Mod            | Common    | Rare      | Very Rare       |  Total  |\n")
+    g.write("|---------------------+-----------+-----------+-----------------+---------|\n")
+    g.write("| Shields             |   %(sCOMMON)3d     |    %(sRARE)3d    |       %(sVERY_RARE)3d       |  %(st)4d   |\n" % items)
+    g.write("|---------------------+-----------+-----------+-----------------+---------|\n")
+    g.write("| Force Amplifiers    |   %(fCOMMON)3d     |    %(fRARE)3d    |       %(fVERY_RARE)3d       |  %(ft)4d   |\n" % items)
+    g.write("|---------------------+-----------+-----------+-----------------+---------|\n")
+    g.write("| Heatsinks           |   %(hCOMMON)3d     |    %(hRARE)3d    |       %(hVERY_RARE)3d       |  %(ht)4d   |\n" % items)
+    g.write("|---------------------+-----------+-----------+-----------------+---------|\n")
+    g.write("| Link Amplifiers     |   %(lCOMMON)3d     |    %(lRARE)3d    |       %(lVERY_RARE)3d       |  %(lt)4d   |\n" % items)
+    g.write("|---------------------+-----------+-----------+-----------------+---------|\n")
+    g.write("| Multihacks          |   %(mCOMMON)3d     |    %(mRARE)3d    |       %(mVERY_RARE)3d       |  %(mt)4d   |\n" % items)
+    g.write("|---------------------+-----------+-----------+-----------------+---------|\n")
+    g.write("| Turrets             |   %(tCOMMON)3d     |    %(tRARE)3d    |       %(tVERY_RARE)3d       |  %(tt)4d   |\n" % items)
+    g.write("|---------------------+-----------+-----------+-----------------+---------|\n")
+    g.write("| Viruses             |         ADA - %(cADA)3d, JARVIS - %(cJARVIS)3d         |  %(ct)4d   |\n" % items)
+    g.write("|---------------------+-----------------------------------------+---------|\n")
+    g.write("| TOTAL NUMBER OF ITEMS (Inventory cap is 2000 items) Keys: %(keyt)3d |  %(t)4d   |\n" % items)
+    g.write("|---------------------------------------------------------------+---------|\n")
+    g.close()
+    

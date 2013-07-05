@@ -92,7 +92,8 @@ class API(object):
 
         # this is the token that is used to authenticate API requests
         self.xsrf_token = None
-
+        self.auth_token = None
+        
         # who we are
         self.player_nickname = None
         self.player_guid = None

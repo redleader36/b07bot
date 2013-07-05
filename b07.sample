@@ -25,3 +25,23 @@ ssl_key = ~/dev/b07/key.pem
 ssl_cert = ~/dev/b07/cert.pem
 
 web_root = ~/dev/b07/static
+
+[emailserver]
+
+# the server hostname (for using your gmail, use smtp.gmail.com)
+
+hostname = ***
+
+# port of the server (for using your gmail, use 465)
+
+port = ***
+
+# email address of the user to send email (for using your gmail, use your gmail e-mail address)
+
+email = ********
+
+# password of the email user (for using your gmail, use your gmail password)
+
+password = ******
+
+

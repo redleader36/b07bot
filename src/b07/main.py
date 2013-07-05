@@ -30,10 +30,9 @@ from b07.log import info
 from b07.inventory import Ada, Jarvis
 
 fromFile = False
-# it's very important to set up logging very early in the life of an
-# application...
 nickname = "test"
 api = None
+settings = {"mail":False, "gear":True, "keys":True}
 
 import b07.api
 import b07.portals
@@ -41,9 +40,18 @@ import b07.portals
 def logportals(inventory, reactor):
     now = datetime.datetime.now()
     inv_count = 0
-    b07.portals.logportals()
+    # Print out keys and counts
+    if settings["keys"]:
+        b07.portals.logportals()
+    # write KML file
     b07.portals.writeKMLFile(api.player_nickname)
-    b07.gear.loggear()
+    b07.gear.writeGear(api.player_nickname)
+    # Email KML file
+    if settings["mail"]:
+        b07.portals.emailKMLFile(api.player_nickname,api.email)
+    # print out gear
+    if settings["gear"]:
+        b07.gear.loggear()
     reactor.stop()
 
 def main():
@@ -72,13 +80,15 @@ def main():
 
 def parseArguments():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-e", "--email-address", dest="email", action="store", help="email address")
-    parser.add_argument("-p", "--password", dest="password", action="store", help="password")
-    parser.add_argument("-d", "--debug", dest="debug", action="store_true", default=False)
-    parser.add_argument("-f", "--from-file", dest="config", action="store_true", default=False)
+    parser.add_argument("-e", "--email-address", dest="email", action="store", help="e-mail used to log into ingress")
+    parser.add_argument("-p", "--password", dest="password", action="store", help="password for your e-mail")
+    parser.add_argument("-d", "--debug", dest="debug", action="store_true", default=False, help="Debug output")
+    parser.add_argument("-f", "--from-file", dest="config", action="store_true", default=False, help="Use -f if you want to use the configuration at ~/.b07")
+    parser.add_argument("-m", "--mail", dest="mail", action="store_true", default=False, help="Use -m if you want the system to email you a kml file of your keys")
+    parser.add_argument("-g", "--no-gear", dest="gear", action="store_false", default=True, help="Use -g if you don't want the system to output your gear to the screen")
+    parser.add_argument("-k", "--no-keys", dest="keys", action="store_false", default=True, help="Use -m if you don't want the system to output your keys to the system")
 
     args = parser.parse_args()
-
     global fromFile
     if args.email is None or args.password is None:
         args.config = True
@@ -93,6 +103,10 @@ def parseArguments():
     else:
         setup(reactor, INFO)
     
+    settings["mail"] = args.mail
+    settings["keys"] = args.keys
+    settings["gear"] = args.gear
+    info("{}".format(settings))
     return(args.email, args.password)
 
 if __name__ == '__main__':
