@@ -1,4 +1,4 @@
-# - mode: python; coding: utf-8 -*-
+# - mode: python; coding: utf-8 -*-
 
 # b07 bot - ingress information bot
 # Copyright © 2013 b07@tormail.org
@@ -269,7 +269,7 @@ class API(object):
         debug('Player GUID:     {}'.format(self.player_guid))
         info('Player nickname: {}'.format(self.player_nickname))
         info('Faction: {}'.format(self.team))
-        info('Player info: {}'.format(result))
+        debug('Player info: {}'.format(result))
 
         self._process_deferred_api_requests()
 
