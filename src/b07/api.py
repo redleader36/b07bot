@@ -1,4 +1,4 @@
-# - mode: python; coding: utf-8 -*-
+# - mode: python; coding: utf-8 -*-
 
 # b07 bot - ingress information bot
 # Copyright © 2013 b07@tormail.org
@@ -98,6 +98,9 @@ class API(object):
         self.player_nickname = None
         self.player_guid = None
         self.team = None
+        self.ap = None
+        self.level = None
+
         # for keeping track of item inventory
         self.inventory = b07.inventory.Inventory()
 
@@ -264,11 +267,15 @@ class API(object):
         self.player_nickname = result['nickname']
         self.player_guid = result['playerEntity'][0]
         self.team = result['playerEntity'][2]['controllingTeam']['team']
+        self.ap = result['playerEntity'][2]['playerPersonal']['ap']
+        self.level = result['playerEntity'][2]['playerPersonal']['clientLevel']
 
         debug('XSRF Token:      {}'.format(self.xsrf_token))
         debug('Player GUID:     {}'.format(self.player_guid))
         info('Player nickname: {}'.format(self.player_nickname))
         info('Faction: {}'.format(self.team))
+        info('AP: {}'.format(self.ap))
+        info('Level: {}'.format(self.level))
         debug('Player info: {}'.format(result))
 
         self._process_deferred_api_requests()
