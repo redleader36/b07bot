@@ -32,7 +32,7 @@ web_root = ~/dev/b07/static
 
 hostname = ***
 
-# port of the server (for using your gmail, use 465)
+# port of the server (for using your gmail, use 587)
 
 port = ***
 

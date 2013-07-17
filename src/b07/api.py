@@ -65,7 +65,7 @@ class API(object):
             BASE = '/intel'
             PLEXTS = '/rpc/dashboard.getPaginatedPlextsV2'
 
-    HANDSHAKE_PARAMS = {'nemesisSoftwareVersion' : '2013-06-28T23:28:27Z 760a7a8ffc90 opt',
+    HANDSHAKE_PARAMS = {'nemesisSoftwareVersion' : '2013-07-12T15:48:09Z d6f04b1fab4f opt',
                         'deviceSoftwareVersion' : '4.1.1'}
 
     def __init__(self, reactor, email, password):
@@ -97,7 +97,7 @@ class API(object):
         # who we are
         self.player_nickname = None
         self.player_guid = None
-
+        self.team = None
         # for keeping track of item inventory
         self.inventory = b07.inventory.Inventory()
 
@@ -263,10 +263,13 @@ class API(object):
         self.xsrf_token = str(result['xsrfToken'])
         self.player_nickname = result['nickname']
         self.player_guid = result['playerEntity'][0]
+        self.team = result['playerEntity'][2]['controllingTeam']['team']
 
         debug('XSRF Token:      {}'.format(self.xsrf_token))
         debug('Player GUID:     {}'.format(self.player_guid))
         info('Player nickname: {}'.format(self.player_nickname))
+        info('Faction: {}'.format(self.team))
+        info('Player info: {}'.format(result))
 
         self._process_deferred_api_requests()
 

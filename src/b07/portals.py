@@ -40,7 +40,7 @@ class Portal(object):
     @classmethod
     def fromPortalCoupler(klass, js):
         guid = js['portalGuid']
-        # print js
+        print js
         if guid in klass.portals:
             return klass.portals[guid]
         return klass(guid,

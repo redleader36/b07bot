@@ -148,7 +148,7 @@ def writeGear(alias):
     ghtml.write('<tr>\n<td colspan="2">Turrets</td><td colspan="2">%(tCOMMON)d</td><td colspan="2">%(tRARE)d</td><td colspan="3">%(tVERY_RARE)d</td><td>%(tt)d</td>\n</tr>\n' % items)
     g.write("| Turrets             |   %(tCOMMON)3d     |    %(tRARE)3d    |       %(tVERY_RARE)3d       |  %(tt)4d   |\n" % items)
     g.write("|---------------------+-----------+-----------+-----------------+---------|\n")
-    ghtml.write('<tr>\n<td colspan="2">Mod</td><td colspan="7">DA - %(cADA)3d, JARVIS - %(cJARVIS)d</td><td>%(ct)d</td>\n</tr>\n' % items)
+    ghtml.write('<tr>\n<td colspan="2">Viruses</td><td colspan="7">ADA - %(cADA)d, JARVIS - %(cJARVIS)d</td><td>%(ct)d</td>\n</tr>\n' % items)
     g.write("| Viruses             |         ADA - %(cADA)3d, JARVIS - %(cJARVIS)3d         |  %(ct)4d   |\n" % items)
     g.write("|---------------------+-----------------------------------------+---------|\n")
     ghtml.write('<tr>\n<td colspan="9">TOTAL NUMBER OF ITEMS (Inventory cap is 2000 items) Keys: %(keyt)d</td><td>%(t)d</td>\n</tr>\n' % items)

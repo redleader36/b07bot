@@ -41,17 +41,17 @@ def logportals(inventory, reactor):
     now = datetime.datetime.now()
     inv_count = 0
     # Print out keys and counts
+    b07.portals.writeKMLFile(api.player_nickname)
+    b07.gear.writeGear(api.player_nickname)
     if settings["keys"]:
         b07.portals.logportals()
     # write KML file
-    b07.portals.writeKMLFile(api.player_nickname)
-    b07.gear.writeGear(api.player_nickname)
-    # Email KML file
-    if settings["mail"]:
-        b07.portals.emailKMLFile(api.player_nickname,api.email)
     # print out gear
     if settings["gear"]:
         b07.gear.loggear()
+    # Email KML file
+    if settings["mail"]:
+        b07.portals.emailKMLFile(api.player_nickname,api.email)
     reactor.stop()
 
 def main():
