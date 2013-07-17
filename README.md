@@ -11,7 +11,7 @@
 3. Copy the sample config file and edit it:
 
    cp b07.sample ~/.b07
-   emacs ~/.b07
+   edit ~/.b07
 
 4. Run the server:
 
@@ -19,3 +19,8 @@
 
 
 
+=======
+b07bot
+======
+
+b07 bot
