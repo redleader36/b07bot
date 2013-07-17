@@ -5,7 +5,7 @@
 1. Install Python and Twisted
 2. Clone the source:
 
-   git clone https://rbytgjd4bbvpqv6u.tor2web.org/git/b07.git
+   git clone https://github.com/dirtydave0221/b07bot.git'
    cd b07
 
 3. Copy the sample config file and edit it:
