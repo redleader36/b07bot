@@ -20,6 +20,7 @@ import ConfigParser
 import cookielib
 import urllib
 import json
+import datetime
 
 from twisted.web.client import Agent
 from twisted.web.client import CookieAgent
@@ -100,6 +101,7 @@ class API(object):
         self.team = None
         self.ap = None
         self.level = None
+        self.start_date = None
 
         # for keeping track of item inventory
         self.inventory = b07.inventory.Inventory()
@@ -161,7 +163,7 @@ class API(object):
                        'accountType': 'HOSTED_OR_GOOGLE'}
 
         body = b07.utils.StringProducer(urllib.urlencode(auth_params))
-
+        trace('_authenticate0 {}'.format(urllib.urlencode(auth_params)))
         d = self.agent.request('POST',
                                self.URLS.CLIENT_LOGIN,
                                Headers({'User-Agent' : ['Nemesis (gzip)'],
@@ -217,7 +219,8 @@ class API(object):
 
         else:
             critical('Authentication failed: Bad response')
-    
+
+        trace('_authenticate2 {}'.format(self.auth_token))
         d = self.agent.request('GET',
                                self.URLS.GAME_API + self.PATHS.LOGIN + '?' + urllib.urlencode({'auth' : self.auth_token}),
                                Headers({'User-Agent' : ['Nemesis (gzip)'],
@@ -227,9 +230,9 @@ class API(object):
         d.addErrback(self.err)
 
     def _authenticate3(self, response):
-        trace('{}'.format(response.code))
+        trace('_authenticate3 {}'.format(response.code))
         for cookie in self.cookiejar:
-            trace('{}'.format(cookie))
+            trace('_authenticate3 {}'.format(cookie))
 
         urlParams = {'json' : json.dumps(self.HANDSHAKE_PARAMS)}
         d = self.agent.request('GET',
@@ -242,7 +245,7 @@ class API(object):
         d.addErrback(self.err)
 
     def _authenticate4(self, response):
-        trace('{}'.format(response.code))
+        trace('_authenticate4 {}'.format(response.code))
 
         if response.code == 200:
             finished = defer.Deferred()
@@ -255,6 +258,8 @@ class API(object):
             critical('Got response code {} after attempting handshake!'.format(response.code))
 
     def _authenticate5(self, result):
+        trace('_authenticate5 {}'.format(result))
+
         result = result['result']
 
         if result['versionMatch'] != 'CURRENT':
@@ -269,6 +274,8 @@ class API(object):
         self.team = result['playerEntity'][2]['controllingTeam']['team']
         self.ap = result['playerEntity'][2]['playerPersonal']['ap']
         self.level = result['playerEntity'][2]['playerPersonal']['clientLevel']
+        start_date = result['storage']['mission_complete_0']
+        self.start_date = datetime.datetime.fromtimestamp(int(start_date.split(':delim:')[1])/1000)
 
         debug('XSRF Token:      {}'.format(self.xsrf_token))
         debug('Player GUID:     {}'.format(self.player_guid))
@@ -276,6 +283,7 @@ class API(object):
         info('Faction: {}'.format(self.team))
         info('AP: {}'.format(self.ap))
         info('Level: {}'.format(self.level))
+        info('Start Date: {}'.format(self.start_date))
         debug('Player info: {}'.format(result))
 
         self._process_deferred_api_requests()
