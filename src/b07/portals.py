@@ -120,7 +120,7 @@ def writeKMLFile(alias):
     keys.sort(lambda a, b: cmp(Portal.portals[a].title, Portal.portals[b].title))
     g = open(os.path.expanduser("~/"+alias+"_keys.kml"),"w")
     g.write('<?xml version="1.0" encoding="UTF-8"?>\n')
-    g.write('<kml xmlns="http://earth.google.com/kml/2.1">\n<Document>\n')
+    g.write("<kml xmlns=\"http://www.opengis.net/kml/2.2\">\n<Document>\n<name>{}\'s Keys</name>".format(alias))
     for key in keys:
         portal = Portal.portals[key]
         g.write('\n<Placemark>\n <name>{0} - {1}</name>\n <description><![CDATA[<h2>{2}</h2><img src="{6}" width=100px/><br>{3}]]></description>\n <Point>\n  <coordinates>{5},{4}</coordinates>\n </Point>\n</Placemark>\n'.format(portal.title.replace("&","&amp;").encode('ascii','ignore'),len(portal.keys), portal.title.replace("&","&amp;").encode('ascii','ignore'), portal.address.replace("&","&amp;").encode('ascii','ignore'), portal.lat, portal.long, portal.image_url))
