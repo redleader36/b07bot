@@ -262,9 +262,6 @@ class API(object):
 
         result = result['result']
 
-        if result['versionMatch'] != 'CURRENT':
-            critical('Software version not up-to-date')
-
         if 'xsrfToken' not in result:
             critical('Authentication with Ingress severs failed for unknown reason')
 

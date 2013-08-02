@@ -110,6 +110,11 @@ def writeGear(alias):
     items = Gear.gear
     g = open(os.path.expanduser("~/"+alias+"_gear.txt"),"w")
     ghtml = open(os.path.expanduser("~/"+alias+"_gear.html"),"w")
+
+#window.COLORS = ['#FF9900', '#0088FF', '#03DC03']; // none, res, enl
+#window.COLORS_LVL = ['#000', '#FECE5A', '#FFA630', '#FF7315', '#E40000', '#FD2992', '#EB26CD', '#C124E0', '#9627F4'];
+#window.COLORS_MOD = {VERY_RARE: '#F78AF6', RARE: '#AD8AFF', COMMON: '#84FBBD'};
+
     ghtml.write('<table border="1">\n')
     g.write("|---------------+-----+-----+-----+-----+-----+-----+-----+-----+---------|\n")
     ghtml.write("<tr>\n<th>Item</th><th>1</th><th>2</th><th>3</th><th>4</th><th>5</th><th>6</th><th>7</th><th>8</th><th>Total</th>\n</tr>\n")
