@@ -6,16 +6,15 @@
 2. Clone the source:
 
    git clone https://github.com/dirtydave0221/b07bot.git  
-   cd b07bot  
+   cd b07bot   
 
-3. Copy the sample config file and edit it:
+3. Run the script:
 
-   cp b07.sample ~/.b07  
-   edit ~/.b07  
-
-4. Run the script:
-
-   PYTHONPATH=src python src/b07/main.py
+   PYTHONPATH=src python src/b07/main.py  
+   
+   The first time the script is run, you will be prompted for username and password and email server configuration. 
+   If you don't have your own email server and information, just answer "n" to the prompt and it will send from your 
+   gmail account to your gmail account.
 
 
 
