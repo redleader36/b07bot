@@ -25,6 +25,7 @@ from twisted.internet import reactor
 
 from b07.log import setup
 from b07.log import TRACE
+from b07.log import trace
 from b07.log import INFO
 from b07.log import info
 from b07.inventory import Ada, Jarvis
@@ -56,12 +57,43 @@ def logportals(inventory, reactor):
 
 def main():
     (email, password, file) = parseArguments()
+    writeConfig = False
+    config = ConfigParser.ConfigParser()
     if fromFile:
-        config = ConfigParser.ConfigParser()
-        config.read(os.path.expanduser(file))
-        email = config.get('ingress','email')
-        password = config.get('ingress','password')
-
+        try:
+            config.read(os.path.expanduser(file))
+            email = config.get('ingress','email')
+            password = config.get('ingress','password')
+        except ConfigParser.NoSectionError: #if ~/.b07 doesn't exist
+        
+            writeConfig = True
+            server = {}
+            info("Please enter your ingress e-mail address: ")
+            email = raw_input()
+            info("Please enter your ingress e-mail password: ")
+            password = raw_input()
+            info("Do you have an email server you want to use? y/n")
+            response = raw_input()
+            
+            if response.lower() == "y" or response.lower() == "yes":
+                info("email server hostname: ")
+                server["hostname"] = raw_input()
+                info("email server port: ")
+                server["port"] = str(raw_input())
+                info("email server email account: ")
+                server["email"] = raw_input()
+                info("email server email account password: ")
+                server["password"] = raw_input()
+                
+            else:
+                server["hostname"] = "smtp.gmail.com"
+                server["port"] = "587"
+                server["email"] = email
+                server["password"] = password
+            
+            createConfigFile(email, password, server)
+            
+            
     now = datetime.datetime.now()
 
     # This is a check for checking which email is being used
@@ -109,6 +141,20 @@ def parseArguments():
     settings["gear"] = args.gear
     info("{}".format(settings))
     return(args.email, args.password, file)
+    
+def createConfigFile(email, password, server):
+    config = ConfigParser.ConfigParser()
+    config.add_section("ingress")
+    config.set("ingress","email",email)
+    config.set("ingress","password",password)
+    config.add_section("emailserver")
+    config.set("emailserver","hostname",server["hostname"])
+    config.set("emailserver","port",server["port"])
+    config.set("emailserver","email",server["email"])
+    config.set("emailserver","password",server["password"])
+    with open(os.path.expanduser('~/.b07'), 'wb') as configfile:
+        config.write(configfile)
+    
 
 if __name__ == '__main__':
     main()
