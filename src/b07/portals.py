@@ -127,11 +127,11 @@ def writeKMLFile(alias):
     g.write('</Document>\n</kml>\n')
     g.close()
     
-def emailKMLFile(alias, email):
+def emailKMLFile(alias, email, configFile):
     msg = MIMEMultipart()
     
     config = ConfigParser.ConfigParser()
-    config.read(os.path.expanduser('~/.b07'))
+    config.read(os.path.expanduser(configFile))
     from_email = config.get('emailserver','email')
     password = config.get('emailserver','password')
     host = config.get('emailserver','hostname')

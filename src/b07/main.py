@@ -31,9 +31,14 @@ from b07.log import info
 from b07.inventory import Ada, Jarvis
 
 fromFile = False
+writeConfig = False
 nickname = "test"
+email = ""
+password = ""
+server = {}
 api = None
 settings = {"mail":False, "gear":True, "keys":True}
+file = ""
 
 import b07.api
 import b07.portals
@@ -42,6 +47,10 @@ def logportals(inventory, reactor):
     now = datetime.datetime.now()
     inv_count = 0
     # Print out keys and counts
+    filename = file
+    if writeConfig:
+        filename = "~/.b07_"+api.player_nickname
+        createConfigFile(filename)
     b07.portals.writeKMLFile(api.player_nickname)
     b07.gear.writeGear(api.player_nickname)
     if settings["keys"]:
@@ -52,12 +61,12 @@ def logportals(inventory, reactor):
         b07.gear.loggear()
     # Email KML file
     if settings["mail"]:
-        b07.portals.emailKMLFile(api.player_nickname,api.email)
+        b07.portals.emailKMLFile(api.player_nickname,api.email,filename)
     reactor.stop()
 
 def main():
-    (email, password, file) = parseArguments()
-    writeConfig = False
+    parseArguments()
+    global email, password, server, writeConfig
     config = ConfigParser.ConfigParser()
     if fromFile:
         try:
@@ -91,7 +100,7 @@ def main():
                 server["email"] = email
                 server["password"] = password
             
-            createConfigFile(email, password, server)
+            createConfigFile(file)
             
             
     now = datetime.datetime.now()
@@ -121,7 +130,7 @@ def parseArguments():
     parser.add_argument("-k", "--no-keys", dest="keys", action="store_false", default=True, help="Use -m if you don't want the system to output your keys to the system")
 
     args = parser.parse_args()
-    global fromFile
+    global fromFile, file, email, password
     file = "~/.b07"
     if args.email is None or args.password is None:
         fromFile = True
@@ -140,9 +149,10 @@ def parseArguments():
     settings["keys"] = args.keys
     settings["gear"] = args.gear
     info("{}".format(settings))
-    return(args.email, args.password, file)
+    email = args.email
+    password = args.password
     
-def createConfigFile(email, password, server):
+def createConfigFile(file_to_write):
     config = ConfigParser.ConfigParser()
     config.add_section("ingress")
     config.set("ingress","email",email)
@@ -152,7 +162,7 @@ def createConfigFile(email, password, server):
     config.set("emailserver","port",server["port"])
     config.set("emailserver","email",server["email"])
     config.set("emailserver","password",server["password"])
-    with open(os.path.expanduser('~/.b07'), 'wb') as configfile:
+    with open(os.path.expanduser(file_to_write), 'wb') as configfile:
         config.write(configfile)
     
 
