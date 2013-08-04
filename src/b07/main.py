@@ -55,10 +55,10 @@ def logportals(inventory, reactor):
     reactor.stop()
 
 def main():
-    (email, password) = parseArguments()
+    (email, password, file) = parseArguments()
     if fromFile:
         config = ConfigParser.ConfigParser()
-        config.read(os.path.expanduser('~/.b07'))
+        config.read(os.path.expanduser(file))
         email = config.get('ingress','email')
         password = config.get('ingress','password')
 
@@ -83,18 +83,19 @@ def parseArguments():
     parser.add_argument("-e", "--email-address", dest="email", action="store", help="e-mail used to log into ingress")
     parser.add_argument("-p", "--password", dest="password", action="store", help="password for your e-mail")
     parser.add_argument("-d", "--debug", dest="debug", action="store_true", default=False, help="Debug output")
-    parser.add_argument("-f", "--from-file", dest="config", action="store_true", default=False, help="Use -f if you want to use the configuration at ~/.b07")
+    parser.add_argument("-f", "--from-file", dest="fromFile", action="store", help="Config postfix for the user you want to do (e.g. WillWheaton is ~/.b07_WillWheaton)")
     parser.add_argument("-m", "--mail", dest="mail", action="store_true", default=False, help="Use -m if you want the system to email you a kml file of your keys")
     parser.add_argument("-g", "--no-gear", dest="gear", action="store_false", default=True, help="Use -g if you don't want the system to output your gear to the screen")
     parser.add_argument("-k", "--no-keys", dest="keys", action="store_false", default=True, help="Use -m if you don't want the system to output your keys to the system")
 
     args = parser.parse_args()
     global fromFile
+    file = "~/.b07"
     if args.email is None or args.password is None:
-        args.config = True
-
-    fromFile = args.config
-
+        fromFile = True
+    if fromFile:
+        if not args.fromFile is None:
+            file = "~/.b07_"+args.fromFile
     # it's very important to set up logging very early in the life of an
     # application...
 
@@ -107,7 +108,7 @@ def parseArguments():
     settings["keys"] = args.keys
     settings["gear"] = args.gear
     info("{}".format(settings))
-    return(args.email, args.password)
+    return(args.email, args.password, file)
 
 if __name__ == '__main__':
     main()
