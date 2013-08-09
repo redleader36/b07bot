@@ -29,6 +29,8 @@ from b07.log import trace
 from b07.log import INFO
 from b07.log import info
 from b07.inventory import Ada, Jarvis
+from b07.mailer import emailKMLFile
+from b07.mailer import emailVersionUpdate
 
 fromFile = False
 writeConfig = False
@@ -36,12 +38,21 @@ nickname = "test"
 email = ""
 password = ""
 server = {}
+database = {}
 api = None
-settings = {"mail":False, "gear":True, "keys":True}
+gear = None
+settings = {"mail":False, "gear":True, "keys":True, "log":False}
 file = ""
 
 import b07.api
 import b07.portals
+import b07.database
+
+def logStatistics(player,filename):
+    db = b07.database.getDatabase(filename)
+    player_id = b07.database.getPlayerID(db,player)
+    b07.database.updateStats(db,player,b07.gear.Gear.gear,player_id)
+    db.close
 
 def logportals(inventory, reactor):
     now = datetime.datetime.now()
@@ -61,7 +72,11 @@ def logportals(inventory, reactor):
         b07.gear.loggear()
     # Email KML file
     if settings["mail"]:
-        b07.portals.emailKMLFile(api.player_nickname,api.email,filename)
+        emailKMLFile(api.player_nickname,api.email,filename)
+    if settings["log"]:
+        logStatistics(api,filename)
+    if api.new_version:
+        emailVersionUpdate(api.player_nickname,api.email,filename)
     reactor.stop()
 
 def main():
@@ -78,7 +93,7 @@ def main():
             writeConfig = True
             server = {}
             info("Please enter your ingress e-mail address: ")
-            email = raw_input()
+            info("Please enter the database password (used for -l): ")
             info("Please enter your ingress e-mail password: ")
             password = raw_input()
             info("Do you have an email server you want to use? y/n")
@@ -99,6 +114,16 @@ def main():
                 server["port"] = "587"
                 server["email"] = email
                 server["password"] = password
+            info("You will not enter the database information (if you do not use -l, then this is not needed)")
+            info("As of right now, the database needs to be a mysql database")
+            info("Please enter the database hostname (used for -l): ")
+            database["hostname"] = raw_input()
+            info("Please enter the database username (used for -l): ")
+            database["username"] = raw_input()
+            info("Please enter the database password (used for -l): ")
+            database["password"] = raw_input()
+            info("Please enter the database name (used for -l): ")
+            database["database"] = raw_input()
             
             createConfigFile(file)
             
@@ -128,6 +153,7 @@ def parseArguments():
     parser.add_argument("-m", "--mail", dest="mail", action="store_true", default=False, help="Use -m if you want the system to email you a kml file of your keys")
     parser.add_argument("-g", "--no-gear", dest="gear", action="store_false", default=True, help="Use -g if you don't want the system to output your gear to the screen")
     parser.add_argument("-k", "--no-keys", dest="keys", action="store_false", default=True, help="Use -m if you don't want the system to output your keys to the system")
+    parser.add_argument("-l", "--log-stats", dest="log", action="store_true", default=False, help="Store AP Statistics into a database")
 
     args = parser.parse_args()
     global fromFile, file, email, password
@@ -148,6 +174,7 @@ def parseArguments():
     settings["mail"] = args.mail
     settings["keys"] = args.keys
     settings["gear"] = args.gear
+    settings["log"] = args.log
     info("{}".format(settings))
     email = args.email
     password = args.password
@@ -162,6 +189,11 @@ def createConfigFile(file_to_write):
     config.set("emailserver","port",server["port"])
     config.set("emailserver","email",server["email"])
     config.set("emailserver","password",server["password"])
+    config.add_section("statisticsdb")
+    config.set("statisticsdb","hostname",database["hostname"])
+    config.set("statisticsdb","username",database["username"])
+    config.set("statisticsdb","password",database["password"])
+    config.set("statisticsdb","database",database["database"])
     with open(os.path.expanduser(file_to_write), 'wb') as configfile:
         config.write(configfile)
     

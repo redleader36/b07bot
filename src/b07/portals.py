@@ -21,18 +21,9 @@
 #027bab59,fa8b43d1 -> 41.659783,-91.536543  
 
 import datetime
-import ConfigParser
 import os
 
 from b07.log import info
-
-# For sending email from python
-import smtplib, os
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEBase import MIMEBase
-from email.MIMEText import MIMEText
-from email.Utils import COMMASPACE, formatdate
-from email import Encoders
 
 class Portal(object):
     portals = {}
@@ -126,38 +117,3 @@ def writeKMLFile(alias):
         g.write('\n<Placemark>\n <name>{0} - {1}</name>\n <description><![CDATA[<h2>{2}</h2><img src="{6}" width=100px/><br>{3}]]></description>\n <Point>\n  <coordinates>{5},{4}</coordinates>\n </Point>\n</Placemark>\n'.format(portal.title.replace("&","&amp;").encode('ascii','ignore'),len(portal.keys), portal.title.replace("&","&amp;").encode('ascii','ignore'), portal.address.replace("&","&amp;").encode('ascii','ignore'), portal.lat, portal.long, portal.image_url))
     g.write('</Document>\n</kml>\n')
     g.close()
-    
-def emailKMLFile(alias, email, configFile):
-    msg = MIMEMultipart()
-    
-    config = ConfigParser.ConfigParser()
-    config.read(os.path.expanduser(configFile))
-    from_email = config.get('emailserver','email')
-    password = config.get('emailserver','password')
-    host = config.get('emailserver','hostname')
-    port = int(config.get('emailserver','port'))
-    msg['From'] = "Ingress Inventory No Reply <"+from_email+">"
-    msg['To'] = email
-    msg['Date'] = formatdate(localtime=True)
-    msg['Subject'] = "Ingress Inventory KML File"
-    files = [os.path.expanduser("~/"+alias+"_keys.kml")]
-    text = "<html><boody>Hi Agent "+alias+",<br>Attached is a copy of your keys in a kml file format, which can be imported into google maps.<br>"
-    file = open(os.path.expanduser("~/"+alias+"_gear.html"),'rb')
-    for line in file.readlines():
-        text += line
-    text += "The Ingress Inventory Team</body></html>"
-    msg.attach( MIMEText(text, 'html'))
-    for file in files:
-        part = MIMEBase('application', "octet-stream")
-        part.set_payload( open(file,"rb").read() )
-        Encoders.encode_base64(part)
-        part.add_header('Content-Disposition', 'attachment; filename="%s"' % os.path.basename(file))
-        msg.attach(part)
-    
-    server = smtplib.SMTP(host,port)
-    server.ehlo()
-    server.starttls()
-    server.ehlo()
-    server.login(from_email,password)
-    server.sendmail(msg['From'], msg['To'], msg.as_string())
-    server.close()

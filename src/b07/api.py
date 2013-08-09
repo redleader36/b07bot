@@ -38,6 +38,7 @@ from b07.log import error
 from b07.log import critical
 from b07.log import log_failure
 from b07.log import CRITICAL
+from b07.log import versionCheck
 
 import b07.utils
 import b07.inventory
@@ -102,6 +103,7 @@ class API(object):
         self.ap = None
         self.level = None
         self.start_date = None
+        self.new_version = False
 
         # for keeping track of item inventory
         self.inventory = b07.inventory.Inventory()
@@ -282,7 +284,9 @@ class API(object):
         info('Level: {}'.format(self.level))
         info('Start Date: {}'.format(self.start_date))
         debug('Player info: {}'.format(result))
-
+        
+        self.new_version = versionCheck(result['serverVersion'])
+        
         self._process_deferred_api_requests()
 
     def _setup_periodic_inventory_refresh(self, result):

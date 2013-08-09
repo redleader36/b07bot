@@ -17,6 +17,8 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import sys
+import os
+import datetime
 
 write = sys.stderr.write
 flush = sys.stderr.flush
@@ -135,3 +137,28 @@ def setup(reactor, level = DEBUG):
     observer = Observer(reactor, level)
     
     log.startLoggingWithObserver(observer.emit, setStdout = 1)
+    
+def versionCheck(version_string):
+    now = datetime.datetime.now()
+    try:
+        versionFile = open(os.path.expanduser('~/.ingress_server_version'),'r')
+        ver_string = versionFile.readline().strip()
+        if not ver_string == version_string:
+            versionFile = open(os.path.expanduser('~/.ingress_server_version'),'wb')
+            versionFile.write(version_string+"\n")
+            versionFile.close()
+            versionFile = open(os.path.expanduser('~/.ingress_server_version_old'),'a')
+            versionFile.write("Update time: {}\n{}\n".format(now, version_string))
+            versionFile.close()
+            return True
+        else:
+            return False
+        
+    except IOError:
+        versionFile = open(os.path.expanduser('~/.ingress_server_version'),'wb')
+        versionFile.write(version_string+"\n")
+        versionFile.close()
+        versionFile = open(os.path.expanduser('~/.ingress_server_version_old'),'a')
+        versionFile.write("Update time: {}\n{}\n".format(now, version_string))
+        versionFile.close()
+        return True
