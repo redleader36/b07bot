@@ -21,6 +21,7 @@ import cookielib
 import urllib
 import json
 import datetime
+import os
 
 from twisted.web.client import Agent
 from twisted.web.client import CookieAgent
@@ -279,12 +280,14 @@ class API(object):
         debug('XSRF Token:      {}'.format(self.xsrf_token))
         debug('Player GUID:     {}'.format(self.player_guid))
         info('Player nickname: {}'.format(self.player_nickname))
-        info('Faction: {}'.format(self.team))
-        info('AP: {}'.format(self.ap))
-        info('Level: {}'.format(self.level))
-        info('Start Date: {}'.format(self.start_date))
-        debug('Player info: {}'.format(result))
+        info('Faction:         {}'.format(self.team))
+        info('AP:              {}'.format(self.ap))
+        info('Level:           {}'.format(self.level))
+        info('Start Date:      {}'.format(self.start_date))
+        debug('Player info:     {}'.format(result))
         
+        with open(os.path.expanduser("~/{}_config.cfg".format(self.player_nickname)),"w") as file:
+            json.dump(result, file, indent=1)
         self.new_version = versionCheck(result['serverVersion'])
         
         self._process_deferred_api_requests()

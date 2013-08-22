@@ -157,6 +157,9 @@ class MultiHack(PortalMod):
 
 class Turret(PortalMod):
     resource_type = 'TURRET'
+    
+class UltraStrike(LevelEntity):
+    resource_type = 'ULTRA_STRIKE'
 
 class FlipCard(GameEntity):
     resource_type = 'FLIP_CARD'

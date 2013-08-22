@@ -20,6 +20,7 @@ import os
 import ConfigParser
 import argparse
 import datetime
+import shutil
 
 from twisted.internet import reactor
 
@@ -77,6 +78,7 @@ def logportals(inventory, reactor):
         logStatistics(api,filename)
     if api.new_version:
         emailVersionUpdate(api.player_nickname,api.email,filename)
+    shutil.copy2(os.path.expanduser("~/{}_config.cfg".format(api.player_nickname)),os.path.expanduser("~/{}_config_old.cfg".format(api.player_nickname)))
     reactor.stop()
 
 def main():
@@ -93,7 +95,7 @@ def main():
             writeConfig = True
             server = {}
             info("Please enter your ingress e-mail address: ")
-            info("Please enter the database password (used for -l): ")
+            email = raw_input()
             info("Please enter your ingress e-mail password: ")
             password = raw_input()
             info("Do you have an email server you want to use? y/n")

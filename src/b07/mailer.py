@@ -56,12 +56,19 @@ def emailVersionUpdate(alias, email, configFile):
     msg['To'] = email
     msg['Date'] = formatdate(localtime=True)
     msg['Subject'] = "Ingress Server Version Update"
+    files = [os.path.expanduser("~/"+alias+"_config_old.cfg"),os.path.expanduser("~/"+alias+"_config.cfg")]
     text = "<html><boody>Hi Agent "+alias+",<br>The Server Version has been updated.<br><br>"
     file = open(os.path.expanduser("~/.ingress_server_version"),'rb')
     for line in file.readlines():
         text += line.strip()+"<br><br>"
     text += "The Ingress Inventory Team</body></html>"
     msg.attach( MIMEText(text, 'html'))
+    for file in files:
+        part = MIMEBase('application', "octet-stream")
+        part.set_payload( open(file,"rb").read() )
+        Encoders.encode_base64(part)
+        part.add_header('Content-Disposition', 'attachment; filename="%s"' % os.path.basename(file))
+        msg.attach(part)
     
     server = smtplib.SMTP(host,port)
     server.ehlo()

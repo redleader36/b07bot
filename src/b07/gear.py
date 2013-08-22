@@ -22,7 +22,7 @@ import os
 from b07.log import info
 
 class Gear(object):
-    gear = {'bt':0, 'rt':0, 'pt':0, 'et':0, 'st':0, 'ft':0, 'ht':0, 'lt':0, 'mt':0, 'tt':0, 'ct':0, 'keyt':0, "t":0}
+    gear = {'bt':0, 'ut':0, 'rt':0, 'pt':0, 'et':0, 'st':0, 'ft':0, 'ht':0, 'lt':0, 'mt':0, 'tt':0, 'ct':0, 'keyt':0, "t":0}
     gear_types = {"EMP_BURSTER": 'b',
              "EMITTER_A": 'r',
              "POWER_CUBE": 'p',
@@ -34,12 +34,13 @@ class Gear(object):
              "MULTIHACK": 'm',
              "TURRET": 't',
              "FLIP_CARD": 'c',
+             "ULTRA_STRIKE": 'u',
              "PORTAL_LINK_KEY": "key"}
     levels = [1, 2, 3, 4, 5, 6, 7, 8]
     rarities = ["COMMON","RARE","VERY_RARE"]
     flips = ["ADA","JARVIS"]
     
-    for level_entity in ['b','r','p','e']:
+    for level_entity in ['b','r','p','e','u']:
         for level in levels:
             key = level_entity+str(level)
             gear[key] = 0
@@ -80,6 +81,8 @@ def loggear():
     info("|     Item      |  1  |  2  |  3  |  4  |  5  |  6  |  7  |  8  |  Total  |")
     info("|---------------+-----+-----+-----+-----+-----+-----+-----+-----+---------|")
     info("| Bursters      | %(b1)3d | %(b2)3d | %(b3)3d | %(b4)3d | %(b5)3d | %(b6)3d | %(b7)3d | %(b8)3d |   %(bt)4d  |" % items)
+    info("|---------------+-----+-----+-----+-----+-----+-----+-----+-----+---------|")
+    info("| Ultra Strikes | %(u1)3d | %(u2)3d | %(u3)3d | %(u4)3d | %(u5)3d | %(u6)3d | %(u7)3d | %(u8)3d |   %(ut)4d  |" % items)
     info("|---------------+-----+-----+-----+-----+-----+-----+-----+-----+---------|")
     info("| Resonators    | %(r1)3d | %(r2)3d | %(r3)3d | %(r4)3d | %(r5)3d | %(r6)3d | %(r7)3d | %(r8)3d |   %(rt)4d  |" % items)
     info("|---------------+-----+-----+-----+-----+-----+-----+-----+-----+---------|")
@@ -122,6 +125,9 @@ def writeGear(alias):
     g.write("|---------------+-----+-----+-----+-----+-----+-----+-----+-----+---------|\n")
     ghtml.write("<tr>\n<td>Bursters</td><td>%(b1)d</td><td>%(b2)d</td><td>%(b3)d</td><td>%(b4)d</td><td>%(b5)d</td><td>%(b6)d</td><td>%(b7)d</td><td>%(b8)d</td><td>%(bt)d</td>\n</tr>\n" % items)
     g.write("| Bursters      | %(b1)3d | %(b2)3d | %(b3)3d | %(b4)3d | %(b5)3d | %(b6)3d | %(b7)3d | %(b8)3d |   %(bt)4d  |\n" % items)
+    g.write("|---------------+-----+-----+-----+-----+-----+-----+-----+-----+---------|\n")
+    ghtml.write("<tr>\n<td>Bursters</td><td>%(u1)d</td><td>%(u2)d</td><td>%(u3)d</td><td>%(u4)d</td><td>%(u5)d</td><td>%(u6)d</td><td>%(u7)d</td><td>%(u8)d</td><td>%(ut)d</td>\n</tr>\n" % items)
+    g.write("| Ultra Strikes | %(u1)3d | %(u2)3d | %(u3)3d | %(u4)3d | %(u5)3d | %(u6)3d | %(u7)3d | %(u8)3d |   %(ut)4d  |\n" % items)
     g.write("|---------------+-----+-----+-----+-----+-----+-----+-----+-----+---------|\n")
     ghtml.write("<tr>\n<td>Resonators</td><td>%(r1)d</td><td>%(r2)d</td><td>%(r3)d</td><td>%(r4)d</td><td>%(r5)d</td><td>%(r6)d</td><td>%(r7)d</td><td>%(r8)d</td><td>%(rt)d</td>\n</tr>\n" % items)
     g.write("| Resonators    | %(r1)3d | %(r2)3d | %(r3)3d | %(r4)3d | %(r5)3d | %(r6)3d | %(r7)3d | %(r8)3d |   %(rt)4d  |\n" % items)
