@@ -122,10 +122,10 @@ def main():
             database["hostname"] = raw_input()
             info("Please enter the database username (used for -l): ")
             database["username"] = raw_input()
-            info("Please enter the database password (used for -l): ")
-            database["password"] = raw_input()
             info("Please enter the database name (used for -l): ")
             database["database"] = raw_input()
+            info("Please enter the database password (used for -l): ")
+            database["password"] = raw_input()
             
             createConfigFile(file)
             

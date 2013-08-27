@@ -126,7 +126,7 @@ def writeGear(alias):
     ghtml.write("<tr>\n<td>Bursters</td><td>%(b1)d</td><td>%(b2)d</td><td>%(b3)d</td><td>%(b4)d</td><td>%(b5)d</td><td>%(b6)d</td><td>%(b7)d</td><td>%(b8)d</td><td>%(bt)d</td>\n</tr>\n" % items)
     g.write("| Bursters      | %(b1)3d | %(b2)3d | %(b3)3d | %(b4)3d | %(b5)3d | %(b6)3d | %(b7)3d | %(b8)3d |   %(bt)4d  |\n" % items)
     g.write("|---------------+-----+-----+-----+-----+-----+-----+-----+-----+---------|\n")
-    ghtml.write("<tr>\n<td>Bursters</td><td>%(u1)d</td><td>%(u2)d</td><td>%(u3)d</td><td>%(u4)d</td><td>%(u5)d</td><td>%(u6)d</td><td>%(u7)d</td><td>%(u8)d</td><td>%(ut)d</td>\n</tr>\n" % items)
+    ghtml.write("<tr>\n<td>Ultra Strikes</td><td>%(u1)d</td><td>%(u2)d</td><td>%(u3)d</td><td>%(u4)d</td><td>%(u5)d</td><td>%(u6)d</td><td>%(u7)d</td><td>%(u8)d</td><td>%(ut)d</td>\n</tr>\n" % items)
     g.write("| Ultra Strikes | %(u1)3d | %(u2)3d | %(u3)3d | %(u4)3d | %(u5)3d | %(u6)3d | %(u7)3d | %(u8)3d |   %(ut)4d  |\n" % items)
     g.write("|---------------+-----+-----+-----+-----+-----+-----+-----+-----+---------|\n")
     ghtml.write("<tr>\n<td>Resonators</td><td>%(r1)d</td><td>%(r2)d</td><td>%(r3)d</td><td>%(r4)d</td><td>%(r5)d</td><td>%(r6)d</td><td>%(r7)d</td><td>%(r8)d</td><td>%(rt)d</td>\n</tr>\n" % items)
