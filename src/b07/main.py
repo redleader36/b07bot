@@ -47,7 +47,7 @@ file = ""
 
 import b07.api
 import b07.portals
-import b07.database
+#import b07.database
 
 def logStatistics(player,filename):
     db = b07.database.getDatabase(filename)
