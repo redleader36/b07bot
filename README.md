@@ -2,7 +2,7 @@
 
 ## Getting Started
 
-1. Install Python, Twisted (Ver 12.1 or newer) and MySQL-python (available on pip)
+1. Install Python (Tested on 2.7.4 on Ubuntu 13.04), Twisted (Ver 12.1 or newer) and MySQL-python (available on pip)
 2. Clone the source:
 
    git clone https://github.com/dirtydave0221/b07bot.git  
