@@ -138,16 +138,16 @@ def setup(reactor, level = DEBUG):
     
     log.startLoggingWithObserver(observer.emit, setStdout = 1)
     
-def versionCheck(version_string):
+def versionCheck(version_string, nickname):
     now = datetime.datetime.now()
     try:
-        versionFile = open(os.path.expanduser('~/.ingress_server_version'),'r')
+        versionFile = open(os.path.expanduser('~/.{}_ingress_server_version'.format(nickname)),'r')
         ver_string = versionFile.readline().strip()
         if not ver_string == version_string:
-            versionFile = open(os.path.expanduser('~/.ingress_server_version'),'wb')
+            versionFile = open(os.path.expanduser('~/.{}_ingress_server_version'.format(nickname)),'wb')
             versionFile.write(version_string+"\n")
             versionFile.close()
-            versionFile = open(os.path.expanduser('~/.ingress_server_version_old'),'a')
+            versionFile = open(os.path.expanduser('~/.{}_ingress_server_version_old'.format(nickname)),'a')
             versionFile.write("Update time: {}\n{}\n".format(now, version_string))
             versionFile.close()
             return True
@@ -155,10 +155,10 @@ def versionCheck(version_string):
             return False
         
     except IOError:
-        versionFile = open(os.path.expanduser('~/.ingress_server_version'),'wb')
+        versionFile = open(os.path.expanduser('~/.{}_ingress_server_version'.format(nickname)),'wb')
         versionFile.write(version_string+"\n")
         versionFile.close()
-        versionFile = open(os.path.expanduser('~/.ingress_server_version_old'),'a')
+        versionFile = open(os.path.expanduser('~/.{}_ingress_server_version_old'.format(nickname)),'a')
         versionFile.write("Update time: {}\n{}\n".format(now, version_string))
         versionFile.close()
         return True

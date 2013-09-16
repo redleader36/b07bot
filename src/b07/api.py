@@ -63,12 +63,13 @@ class API(object):
             RECYCLE = '/rpc/gameplay/recycleItem'
             SAY = '/rpc/player/say'
             INVENTORY =  '/rpc/playerUndecorated/getInventory'
+            PROFILE = '/rpc/playerUndecorated/getPlayerProfile'
             PLEXTS = '/rpc/playerUndecorated/getPaginatedPlexts'
         class INTEL:
             BASE = '/intel'
             PLEXTS = '/rpc/dashboard.getPaginatedPlextsV2'
 
-    HANDSHAKE_PARAMS = {'nemesisSoftwareVersion' : '2013-08-21T02:36:42Z 45405252f3a7 opt',
+    HANDSHAKE_PARAMS = {'nemesisSoftwareVersion' : '2013-09-10T22:08:32Z 904499d6f84a opt',
                         'deviceSoftwareVersion' : '4.1.1'}
 
     def __init__(self, reactor, email, password):
@@ -122,6 +123,9 @@ class API(object):
         # do an immediate inventory refresh
         self._first_inventory_ready = self._defer_until_authenticated(self._inventory0, (), {})
 
+        # do an immediate profile refresh
+        self._first_profile_ready = self._defer_until_authenticated(self._profile0, (), {})
+
         # refresh inventory periodically
         self._first_inventory_ready.addCallback(self._setup_periodic_inventory_refresh)
 
@@ -132,6 +136,12 @@ class API(object):
         """Manually start an inventory refresh."""
 
         return self._defer_until_authenticated(self._inventory0, (), {})
+
+    def refreshProfile(self):
+        """Manually start a profile refresh."""
+
+        return self._defer_until_authenticated(self._profile0, (), {})
+
 
     def onInventoryRefreshed(self, callback, *args, **kw):
         self._on_inventory_refreshed.append((callback, args, kw))
@@ -288,7 +298,7 @@ class API(object):
         
         with open(os.path.expanduser("~/{}_config.cfg".format(self.player_nickname)),"w") as file:
             json.dump(result, file, indent=1)
-        self.new_version = versionCheck(result['serverVersion'])
+        self.new_version = versionCheck(result['serverVersion'], self.player_nickname)
         
         self._process_deferred_api_requests()
 
@@ -334,3 +344,35 @@ class API(object):
         finished.callback(self.inventory)
         for callback, args, kw in self._on_inventory_refreshed:
             self.reactor.callLater(0, callback, self.inventory, *args, **kw)
+
+    def _profile0(self, finished):
+        debug('Requesting profile from server...')
+        body = b07.utils.StringProducer(json.dumps({'params' : self.player_nickname}))
+        d = self.agent.request('POST',
+                               self.URLS.GAME_API + self.PATHS.API.PROFILE,
+                               Headers({'User-Agent' : ['Nemesis (gzip)'],
+                                        'Content-Type': ['application/json;charset=UTF-8'],
+                                        'X-XsrfToken': [self.xsrf_token]}),
+                               body)
+
+        d.addCallback(self._profile1, finished)
+        d.addErrback(self.err)
+
+    def _profile1(self, response, finished):
+        if response.code == 500:
+            error('Got a 500 SERVER ERROR trying to get the profile!')
+
+        elif response.code == 200:
+            debug('Got 200 OK response to profile request')
+            d = defer.Deferred()
+            d.addCallback(self._inventory2, finished)
+            jp = b07.utils.JsonProtocol(d)
+            response.deliverBody(jp)
+
+        else:
+            error('Don\'t know what to do with {} code in response to profile request!'.format(response.code))
+
+    def _profile2(self, result, finished):
+        with open(os.path.expanduser("~/{}_profile.json".format(self.player_nickname)),"w") as file:
+            json.dump(result, file, indent=1)
+
