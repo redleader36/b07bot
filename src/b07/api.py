@@ -120,14 +120,11 @@ class API(object):
         # list of functions to call every time inventory is refreshed
         self._on_inventory_refreshed = []
 
-        # do an immediate inventory refresh
-        self._first_inventory_ready = self._defer_until_authenticated(self._inventory0, (), {})
-
         # do an immediate profile refresh
         self._first_profile_ready = self._defer_until_authenticated(self._profile0, (), {})
 
-        # refresh inventory periodically
-        self._first_inventory_ready.addCallback(self._setup_periodic_inventory_refresh)
+        # do an immediate inventory refresh
+        self._first_inventory_ready = self._defer_until_authenticated(self._inventory0, (), {})
 
         # start the authentication process
         self.reactor.callLater(0, self._authenticate0)
@@ -347,7 +344,7 @@ class API(object):
 
     def _profile0(self, finished):
         debug('Requesting profile from server...')
-        body = b07.utils.StringProducer(json.dumps({'params' : self.player_nickname}))
+        body = b07.utils.StringProducer(json.dumps({'params' : [self.player_nickname]}))
         d = self.agent.request('POST',
                                self.URLS.GAME_API + self.PATHS.API.PROFILE,
                                Headers({'User-Agent' : ['Nemesis (gzip)'],
@@ -365,7 +362,7 @@ class API(object):
         elif response.code == 200:
             debug('Got 200 OK response to profile request')
             d = defer.Deferred()
-            d.addCallback(self._inventory2, finished)
+            d.addCallback(self._profile2, finished)
             jp = b07.utils.JsonProtocol(d)
             response.deliverBody(jp)
 

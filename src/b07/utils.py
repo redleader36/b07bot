@@ -23,7 +23,7 @@ from twisted.internet import defer
 from twisted.web.iweb import IBodyProducer
 from twisted.internet.protocol import Protocol
 
-from b07.log import trace, debug
+from b07.log import trace, debug, info
 
 class StringProducer(object):
     implements(IBodyProducer)
