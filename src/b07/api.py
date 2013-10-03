@@ -69,7 +69,7 @@ class API(object):
             BASE = '/intel'
             PLEXTS = '/rpc/dashboard.getPaginatedPlextsV2'
 
-    HANDSHAKE_PARAMS = {'nemesisSoftwareVersion' : '2013-09-10T22:08:32Z 904499d6f84a opt',
+    HANDSHAKE_PARAMS = {'nemesisSoftwareVersion' : '2013-09-19T02:22:36Z d1073636dce6 opt',
                         'deviceSoftwareVersion' : '4.1.1'}
 
     def __init__(self, reactor, email, password):
@@ -106,6 +106,8 @@ class API(object):
         self.level = None
         self.start_date = None
         self.new_version = False
+        self.inventory_done = False
+        self.profile_done = False
 
         # for keeping track of item inventory
         self.inventory = b07.inventory.Inventory()
@@ -120,11 +122,11 @@ class API(object):
         # list of functions to call every time inventory is refreshed
         self._on_inventory_refreshed = []
 
-        # do an immediate profile refresh
-        self._first_profile_ready = self._defer_until_authenticated(self._profile0, (), {})
-
         # do an immediate inventory refresh
         self._first_inventory_ready = self._defer_until_authenticated(self._inventory0, (), {})
+
+        # do an immediate profile refresh
+        self._first_profile_ready = self._defer_until_authenticated(self._profile0, (), {})
 
         # start the authentication process
         self.reactor.callLater(0, self._authenticate0)
@@ -164,6 +166,7 @@ class API(object):
         while self._deferred_api_requests:
             func, args, kw = self._deferred_api_requests.pop(0)
             self.reactor.callLater(0, func, *args, **kw)
+
 
     def _authenticate0(self):
         auth_params = {'Email': self.email,
@@ -341,6 +344,7 @@ class API(object):
         finished.callback(self.inventory)
         for callback, args, kw in self._on_inventory_refreshed:
             self.reactor.callLater(0, callback, self.inventory, *args, **kw)
+        self.inventory_done = True
 
     def _profile0(self, finished):
         debug('Requesting profile from server...')
@@ -363,6 +367,7 @@ class API(object):
             debug('Got 200 OK response to profile request')
             d = defer.Deferred()
             d.addCallback(self._profile2, finished)
+            d.addCallback(self._inventory0)
             jp = b07.utils.JsonProtocol(d)
             response.deliverBody(jp)
 
@@ -372,4 +377,5 @@ class API(object):
     def _profile2(self, result, finished):
         with open(os.path.expanduser("~/{}_profile.json".format(self.player_nickname)),"w") as file:
             json.dump(result, file, indent=1)
+        self.profile_done = True
 

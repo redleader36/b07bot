@@ -21,6 +21,7 @@ import ConfigParser
 import argparse
 import datetime
 import shutil
+import time
 
 from twisted.internet import reactor
 
@@ -79,6 +80,10 @@ def logportals(inventory, reactor):
     if api.new_version:
         emailVersionUpdate(api.player_nickname,api.email,filename)
     shutil.copy2(os.path.expanduser("~/{}_config.cfg".format(api.player_nickname)),os.path.expanduser("~/{}_config_old.cfg".format(api.player_nickname)))
+    while api.inventory_done == False or api.profile_done == False:
+        info("waiting for stuff to finish")
+        time.sleep(5)
+    info("everything is complete")
     reactor.stop()
 
 def main():
