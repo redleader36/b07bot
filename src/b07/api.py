@@ -69,7 +69,7 @@ class API(object):
             BASE = '/intel'
             PLEXTS = '/rpc/dashboard.getPaginatedPlextsV2'
 
-    HANDSHAKE_PARAMS = {'nemesisSoftwareVersion' : '2013-10-07T21:02:13Z a7cb9f5402e7 opt',#2013-09-19T02:22:36Z d1073636dce6 opt',
+    HANDSHAKE_PARAMS = {'nemesisSoftwareVersion' : '2013-10-07T21:02:13Z a7cb9f5402e7 opt',
                         'deviceSoftwareVersion' : '4.1.1'}
 
     def __init__(self, reactor, email, password):
